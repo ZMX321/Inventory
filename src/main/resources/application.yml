@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: interview
+
+
+  banner:
+    charset: UTF-8
+    location: classpath:banner.txt
