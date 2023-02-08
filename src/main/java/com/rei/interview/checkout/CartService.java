@@ -14,9 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CartService {
 
-    private ProductService productService;
-    private InventoryService inventoryService;
-    private CartRepository cartRepository;
+    private final ProductService productService;
+    private final InventoryService inventoryService;
+    private final CartRepository cartRepository;
+
+
 
     @Autowired
     public CartService(ProductService productService, InventoryService inventoryService, CartRepository cartRepository) {
@@ -30,38 +32,32 @@ public class CartService {
         Cart cart;
 
         // do we have a valid product?
-        if (StringUtils.isNumeric(product.getProductId()) && product.getProductId().length() == 6 && !product.getBrand().isEmpty() && !product.getDescription().isEmpty() && product.getPrice() != null && product.getPrice().compareTo(BigDecimal.ZERO) == 1) {
-
-            // is there enough inventory to sell this product?
-            if (inventoryService.hasInventoryOnline(product, quantity) || inventoryService.hasInventoryInNearbyStores(product, quantity, location)) {
-
-                // is there already a cart for this customer?
-                if(cartId == null) {
-                    cart = new Cart();
-                    cartRepository.addCart(cart);
-                } else {
-                    cart = cartRepository.getCart(cartId);
-                    if (cart == null) {
-                        cart = new Cart();
-                        cartRepository.addCart(cart);
-                    }
-                }
-
-                //is this item already in the cart? If so add to the existing quantity
-                Integer existingQuantity = cart.getProducts().get(product);
-
-                if (existingQuantity != null) {
-                    cart.getProducts().put(product, existingQuantity + quantity);
-                } else {
-                    cart.getProducts().put(product, quantity);
-                }
-            } else {
-                throw new Exception("No inventory for this product");
-            }
-        } else {
+        if (!StringUtils.isNumeric(product.getProductId()) || product.getProductId().length() != Product.PRODUCT_ID_LENGTH || product.getDescription().isEmpty() || product.getPrice().compareTo(BigDecimal.ZERO) < 1) {
             throw new Exception("Invalid Product");
         }
-    return cart;
+
+
+        // is there enough inventory to sell this product?
+        if (!inventoryService.hasInventoryOnline(product, quantity) && !inventoryService.hasInventoryInNearbyStores(product, quantity, location)) {
+            throw new Exception("No inventory for this product");
+        }
+
+        // is there already a cart for this customer?
+        if(cartId == null || (cart = cartRepository.getCart(cartId)) == null){
+            cart = new Cart();
+            cartRepository.addCart(cart);
+        }
+
+        //is this item already in the cart? If so add to the existing quantity
+        Integer existingQuantity;
+        if((existingQuantity = cart.getProducts().get(product)) == null){
+            cart.getProducts().put(product, 0);
+        }
+        cart.getProducts().put(product, existingQuantity == null ? 0 : existingQuantity + quantity);
+
+
+
+        return cart;
     }
 }
 

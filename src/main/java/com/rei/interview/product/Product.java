@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product {
+
+    public static final Integer PRODUCT_ID_LENGTH = 6;
     private String productId;
     private String brand;
     private String description;
