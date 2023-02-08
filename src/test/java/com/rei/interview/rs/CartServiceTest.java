@@ -9,14 +9,12 @@ import com.rei.interview.product.ProductService;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class CartTest {
+public class CartServiceTest {
 
     private final ProductService productService;
 
@@ -28,7 +26,7 @@ public class CartTest {
 
 
 
-   public CartTest(){
+   public CartServiceTest(){
        this.cartRepository = mock(CartRepository.class);
        this.productService = mock(ProductService.class);
        this.inventoryService = mock(InventoryService.class);
