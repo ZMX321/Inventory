@@ -62,12 +62,6 @@ public class CartWebService {
         return dto;
     }
 
-    private ProductDto transform(Product product) {
-        ProductDto dto = new ProductDto();
-        dto.setProductId(product.getProductId());
-        dto.setDescription(product.getDescription());
-        dto.setBrand(product.getBrand());
-        return dto;
-    }
+
 
 }

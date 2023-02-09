@@ -1,10 +1,20 @@
 package com.rei.interview.rs.product;
 
+import com.rei.interview.product.Product;
+
+import java.math.BigDecimal;
+
 public class ProductDto {
 
     private String productId;
     private String brand;
-    private String description;
+    private BigDecimal price;
+
+    public ProductDto(Product product){
+        this.productId = product.getProductId();
+        this.brand = product.getBrand();
+        this.price = product.getPrice();
+    }
 
     public String getProductId() {
         return productId;
@@ -22,12 +32,12 @@ public class ProductDto {
         this.brand = brand;
     }
 
-    public String getDescription() {
-        return description;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     @Override
